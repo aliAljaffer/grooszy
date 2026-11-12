@@ -4,7 +4,7 @@ Reference from commit e2ecaa3 (`parsers/reference/`), run from a temp directory.
 Both XLSX files in `statements/` share sha256 4d0a3174, so the runs are repeats.
 
 ## Commands
-```
+```bash
 go run ./cmd/statement statements/<file>.xlsx --json=<tmp>/go-<file>.json
 cd <tmp>/ref && python3 alinma_xlsx.py statements/<file>.xlsx --json <tmp>/py-<file>.json
 ```

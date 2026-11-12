@@ -45,7 +45,7 @@ Row B, Arabic only, carries the real purchase amount.
 
 Example, a 25.75 SAR purchase:
 
-```
+```text
 Row A  "SAR 25.75 purchase was made with Apple Pay App by Mada Card *0630
         at SAMPLE CO On 05-11-2025 ..."              debit -4.25
 Row B  "SAR 25.75 تم الشراء مع Apple Pay App بواسطة Mada Card *0630
@@ -66,7 +66,7 @@ Not every purchase has a sweep. Do not assume pairs.
 The exporter marks wrapped lines with `#` inside the description, sometimes mid
 word.
 
-```
+```text
 "في SAMPLE STORE   #TRAD على 06-11-2025"
 ```
 
@@ -93,7 +93,7 @@ any merchant regex, or `SAMPLE STORE TRAD` fragments.
 One row holds the SAR amount, the original currency and amount, the exchange
 rate and the commission.
 
-```
+```text
 ... for SAR 1001.25 من SAMPLE__ على 19-11-2025 ...
 SAMPLE LLC,USD 267.00 ID55000001 ... سعر الصرف 3.75
 USD #267 25.03 العمولة
@@ -131,7 +131,7 @@ Parse in this order:
 
 ### Transaction type strings
 
-```
+```text
 POS purchase Apple pay (Domestic)
 POS purchase Apple pay (International)
 Online purchase Apple pay (Domestic)
@@ -153,7 +153,7 @@ Message to beneficiary
 
 ### POS note format
 
-```
+```text
 Notes:(1234567890123456-123456789012) SAMPLE STORE
       ANY CITY, SA
 ```
@@ -163,7 +163,7 @@ of the merchant. Strip `(\d+-\d+)` then strip the trailing `, CITY, SA`.
 
 ### Sadad note format
 
-```
+```text
 Notes:W#153-4000000001 -10000000001  500.00 SAR
 ```
 
