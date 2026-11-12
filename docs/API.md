@@ -762,7 +762,7 @@ without waiting for the first of the month.
 
 ## Local development
 
-```
+```bash
 docker run -d --name expense-db -e POSTGRES_PASSWORD=test -e POSTGRES_DB=test -p 5432:5432 postgres:17
 export DATABASE_URL='postgres://postgres:test@localhost:5432/test?sslmode=disable'
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f api/migrations/0001_init.up.sql
@@ -772,7 +772,7 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f api/migrations/0002_import_preview.up
 Integration tests create and drop their own schema. Without `DATABASE_URL` they
 skip.
 
-```
+```bash
 go test ./...
 DATABASE_URL=... go test -race ./...
 ```

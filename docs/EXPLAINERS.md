@@ -72,7 +72,7 @@ Any local server that speaks the OpenAI chat completions format works. The base
 URL is the root that sits before `/chat/completions`. For Ollama, which serves
 that path under `/v1`:
 
-```
+```bash
 export GROOSZY_EXPLAIN_PROVIDER="openai"
 export GROOSZY_EXPLAIN_BASE_URL="http://127.0.0.1:11434/v1"
 export GROOSZY_EXPLAIN_MODEL="<the model you pulled>"
@@ -88,7 +88,7 @@ An OpenAI-compatible host, for example OpenRouter, OpenAI, z.ai, Moonshot, or
 any compatible gateway, uses the `openai` provider and the base URL printed in
 that provider's documentation:
 
-```
+```bash
 export GROOSZY_EXPLAIN_PROVIDER="openai"
 export GROOSZY_EXPLAIN_BASE_URL="<provider API root>"
 export GROOSZY_EXPLAIN_MODEL="<provider model name>"
@@ -100,7 +100,7 @@ export GROOSZY_EXPLAIN_API_KEY="<provider key>"
 OpenCode Console serves an OpenAI-compatible endpoint. Create a key in the
 Console and copy it once; the app never needs a console login.
 
-```
+```bash
 export GROOSZY_EXPLAIN_PROVIDER="openai"
 export GROOSZY_EXPLAIN_BASE_URL="https://opencode.ai/inference/openai/v1"
 export GROOSZY_EXPLAIN_MODEL="deepseek-v4.1-flash"
@@ -116,7 +116,7 @@ plan. The deployed dev stack reads the key from the `grooszy-explain` Secret in
 The Anthropic messages endpoint uses the `anthropic` provider and the provider
 root as the base URL. The app appends `/v1/messages` itself:
 
-```
+```bash
 export GROOSZY_EXPLAIN_PROVIDER="anthropic"
 export GROOSZY_EXPLAIN_BASE_URL="https://api.anthropic.com"
 export GROOSZY_EXPLAIN_MODEL="<provider model name>"
@@ -125,7 +125,7 @@ export GROOSZY_EXPLAIN_API_KEY="<provider key>"
 
 ## Check it
 
-```
+```bash
 curl -s -H "Authorization: Bearer <token>" http://localhost:8080/api/explainers/status
 ```
 

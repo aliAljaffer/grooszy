@@ -5,7 +5,7 @@ stage has no shell, no source tree, and runs as numeric UID 65532.
 
 ## Build and run locally
 
-```
+```bash
 docker build -f Dockerfile.api -t grooszy-api:test .
 docker run --rm \
   -e DATABASE_URL='postgres://postgres:test@localhost:5432/test?sslmode=disable' \
@@ -36,7 +36,7 @@ The API refuses to start when a required value is missing.
 The `image` job in `.github/workflows/go.yml` runs on pushes to `main`, after
 the test job passes. It pushes to:
 
-```
+```text
 ghcr.io/alialjaffer/grooszy-api:<commit sha>
 ghcr.io/alialjaffer/grooszy-api:latest
 ```
