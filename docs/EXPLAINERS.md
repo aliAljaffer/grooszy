@@ -10,9 +10,10 @@ never written to the database.
 
 ## Opt-in warning
 
-Enabling an explainer sends aggregate figures to the provider you configure. If
-the provider is a hosted service, those figures leave your machine. Nothing else
-leaves it.
+> [!WARNING]
+> Enabling an explainer sends aggregate figures to the provider you configure. If
+> the provider is a hosted service, those figures leave your machine. Nothing else
+> leaves it.
 
 Set the feature only when you accept that trade. Unset any one of the base URL,
 model, or key to switch it off again.

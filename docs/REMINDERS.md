@@ -50,9 +50,13 @@ never calls the Go API directly.
 
 ## Endpoints
 
-All three routes require the owner's bearer token. A missing or invalid token
-returns 401. A valid token for another subject returns 403. A database that is
-not reachable returns 503 `{"error":"database unavailable"}`.
+All three routes require the owner's bearer token and return these errors:
+
+| Condition | Status | Body |
+|---|---|---|
+| Missing or invalid token | 401 | - |
+| Valid token for another subject | 403 | - |
+| Database not reachable | 503 | `{"error":"database unavailable"}` |
 
 ### GET /api/settings
 

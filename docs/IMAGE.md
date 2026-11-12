@@ -15,8 +15,9 @@ docker run --rm \
   grooszy-api:test
 ```
 
-Inside the container `localhost` is the container, not your machine. To reach a
-database or Keycloak on the host, use `DATABASE_URL=postgres://postgres:test@host.docker.internal:5432/test?sslmode=disable`.
+> [!NOTE]
+> Inside the container `localhost` is the container, not your machine. To reach a
+> database or Keycloak on the host, use `DATABASE_URL=postgres://postgres:test@host.docker.internal:5432/test?sslmode=disable`.
 
 ## Environment
 

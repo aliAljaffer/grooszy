@@ -12,12 +12,16 @@ The operator needs a master-realm service account with admin privileges to creat
 
 1. Log in as the bootstrap admin (credentials in `kubectl get secret keycloak-initial-admin -n keycloak -o go-template='{{.data.username | base64decode}}:{.data.password | base64decode}}'`).
 2. Go to Realm Settings for the `master` realm.
-3. Create a client:
-   - Name: `keycloak-admin`.
-   - Client authentication: enabled.
-   - Service accounts enabled: enabled.
-   - Standard flow disabled.
-   - Direct access grants disabled.
+3. Create a client with these settings:
+
+   | Setting | Value |
+   |---|---|
+   | Name | `keycloak-admin` |
+   | Client authentication | enabled |
+   | Service accounts enabled | enabled |
+   | Standard flow | disabled |
+   | Direct access grants | disabled |
+
 4. Copy the client ID and secret (Credentials tab, Client secret field).
 5. Grant roles to the service account (Service account roles tab):
    - Add `manage-clients` and `manage-realms` roles from the `realm-management` client (search for `manage-` and the available realm roles appear).
@@ -47,12 +51,16 @@ The KeycloakOIDCClient CRD (v2alpha1) does not expose protocol mappers, so this 
 
 1. In the admin console, open the grooszy client.
 2. Go to Mappers.
-3. Create a mapper:
-   - Name: `grooszy-audience`.
-   - Type: `Audience`.
-   - Included Client Audience: `grooszy`.
-   - Add to access token: enabled.
-   - Save.
+3. Create a mapper with these settings:
+
+   | Setting | Value |
+   |---|---|
+   | Name | `grooszy-audience` |
+   | Type | `Audience` |
+   | Included Client Audience | `grooszy` |
+   | Add to access token | enabled |
+
+4. Save.
 
 Alternative: use `kcadm.sh` from inside a Keycloak pod to add the mapper programmatically:
 ```bash
@@ -76,11 +84,14 @@ Replace `<ADMIN_PASSWORD>` with the bootstrap admin password and `CLIENT_ID` wit
 Once the OIDC client is ready and the protocol mapper is in place, configure the grooszy Deployment:
 
 Set environment variables in `kubernetes/apps/grooszy/api-deployment.yaml`:
-- `OIDC_ISSUER=https://kc.alialjaffer.com/realms/homelab`: Keycloak issuer URL (public endpoint).
-- `OIDC_CLIENT_ID=grooszy`: Client name from the Keycloak admin console.
-- `OIDC_AUDIENCE=grooszy`: Same as client ID (required by the API token validator).
-- `OIDC_OWNER_SUBJECT`: The Keycloak user's `sub` claim (opaque user ID from the Keycloak admin console: open the user, scroll to ID at the top, copy it). This identifies the owner of the expense data.
-- `APP_ORIGIN=https://grooszy.alialjaffer.com`: The public app URL (used for OIDC redirect validation).
+
+| Variable | Value | Meaning |
+|---|---|---|
+| `OIDC_ISSUER` | `https://kc.alialjaffer.com/realms/homelab` | Keycloak issuer URL (public endpoint) |
+| `OIDC_CLIENT_ID` | `grooszy` | Client name from the Keycloak admin console |
+| `OIDC_AUDIENCE` | `grooszy` | Same as client ID (required by the API token validator) |
+| `OIDC_OWNER_SUBJECT` | The Keycloak user's `sub` claim | Identifies the owner of the expense data. The `sub` claim is an opaque user ID: open the user in the admin console, scroll to ID at the top, copy it |
+| `APP_ORIGIN` | `https://grooszy.alialjaffer.com` | The public app URL (used for OIDC redirect validation) |
 
 Example:
 ```yaml

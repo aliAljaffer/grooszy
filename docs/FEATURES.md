@@ -14,9 +14,16 @@ Without these the numbers are wrong, and wrong numbers are worse than none.
 
 ### 1. Import reconciliation
 
-Every statement header carries opening balance, closing balance, deposit count,
-withdrawal count, total deposits and total withdrawals. Check the parse against
-all six. Refuse the import if any fails.
+Every statement header carries six figures:
+
+- Opening balance
+- Closing balance
+- Deposit count
+- Withdrawal count
+- Total deposits
+- Total withdrawals
+
+Check the parse against all six. Refuse the import if any fails.
 
 This is the single most valuable feature. A first-pass PDF parser captured
 about two thirds of the rows and the totals were short by thousands of riyals.
