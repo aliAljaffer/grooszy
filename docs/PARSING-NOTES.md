@@ -52,8 +52,13 @@ Row B  "SAR 25.75 تم الشراء مع Apple Pay App بواسطة Mada Card *0
         في SAMPLE CO على 05-11-2025 ..."             debit -25.75
 ```
 
-The sweep rounds up to the next multiple of 5. 25.75 sweeps 4.25. 30.42 sweeps
-4.58. 89.00 sweeps 1.00.
+The sweep rounds up to the next multiple of 5:
+
+| Purchase (SAR) | Sweep (SAR) |
+|---|---|
+| 25.75 | 4.25 |
+| 30.42 | 4.58 |
+| 89.00 | 1.00 |
 
 Reliable test: parse the `SAR <amount>` prefix and compare it to the debit. On
 the Arabic row they match on every row tested. On the English row they almost

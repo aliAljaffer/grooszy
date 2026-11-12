@@ -19,8 +19,9 @@ statements stay in `statements/`, which Git ignores.
 | `docs/README.md` | This index |
 | `docs/REMINDERS.md` | The monthly email, the settings screen, the three endpoints, and SMTP setup |
 
-Wiki pages are generated from the Markdown files in this folder after every
-merge to main. Edit the file here, never the wiki page.
+> [!WARNING]
+> Wiki pages are generated from the Markdown files in this folder after every
+> merge to main. Edit the file here, never the wiki page.
 
 The workflow skips with a warning while the repository stays private, because a
 private repository on the free plan has no wiki. Enable the wiki and create one

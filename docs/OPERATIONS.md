@@ -104,9 +104,10 @@ export DATABASE_URL='postgres://postgres:test@localhost:5432/test?sslmode=disabl
 
 ### 3. Start the test issuer
 
-Warning: the test issuer is for local use only. It issues a token for the fixed
-subject `test-subject-123` to anyone who completes the flow. Never expose it
-outside your machine.
+> [!WARNING]
+> The test issuer is for local use only. It issues a token for the fixed
+> subject `test-subject-123` to anyone who completes the flow. Never expose it
+> outside your machine.
 
 ```bash
 ISSUER_URL=http://127.0.0.1:8900 node web/e2e/support/test-issuer.mjs
@@ -171,9 +172,13 @@ kubectl -n grooszy-dev get pods
 ```
 
 The cluster needs the CloudNativePG operator and a `longhorn` storage class,
-which the cluster manifest names. The database does not bootstrap until secret
-`grooszy-postgres` exists. The API pod does not start until secret `grooszy-app`
-exists. The web pod does not start until secret `web-session-secret` exists.
+which the cluster manifest names. Each workload waits for a secret:
+
+| Workload | Waits for secret |
+|---|---|
+| Database bootstrap | `grooszy-postgres` |
+| API pod start | `grooszy-app` |
+| Web pod start | `web-session-secret` |
 
 Reach the UI:
 
@@ -185,17 +190,14 @@ No Ingress or HTTPRoute is in this repository.
 
 ### Database connection
 
-The API reads `DATABASE_URL` from secret `grooszy-app`, key `uri`
-(`deploy/dev/04-api-deployment.yaml`). The cluster bootstraps database
-`grooszy` with owner `grooszy` through bootstrap secret `grooszy-postgres`
-(`deploy/dev/02-cnpg-cluster.yaml`). How `grooszy-app` is created is
-`not in this repository`.
+| Setting | Secret | Key | Defined in |
+|---|---|---|---|
+| API `DATABASE_URL` | `grooszy-app` | `uri` | `deploy/dev/04-api-deployment.yaml` |
+| Database `grooszy` bootstrap, owner `grooszy` | `grooszy-postgres` | - | `deploy/dev/02-cnpg-cluster.yaml` |
+| Web `SESSION_SECRET` | `web-session-secret` | `secret` | `deploy/dev/05-web-deployment.yaml` |
 
-### Web session secret
-
-The web deployment reads `SESSION_SECRET` from secret `web-session-secret`, key
-`secret` (`deploy/dev/05-web-deployment.yaml`). Its value is
-`not in this repository`.
+How `grooszy-app` is created is `not in this repository`. The value of
+`web-session-secret` is `not in this repository`.
 
 ### Production
 
@@ -213,9 +215,10 @@ bash scripts/e2e-cluster.sh
 The script port-forwards the web app, the test issuer, and the API, then runs
 Playwright. It needs the `grooszy-dev` namespace and `kubectl` access.
 
-Warning: `--reset-db` truncates every table in the `grooszy` database before
-the run (`scripts/e2e-cluster.sh`). Do not use it against a database you want
-to keep.
+> [!WARNING]
+> `--reset-db` truncates every table in the `grooszy` database before
+> the run (`scripts/e2e-cluster.sh`). Do not use it against a database you want
+> to keep.
 
 ## Migration check
 
@@ -298,9 +301,13 @@ npx playwright test web/e2e/cluster.spec.ts --workers=1
 The spec uploads a synthetic fixture, checks the parsed preview, then cancels,
 so it writes no rows. It skips when `E2E_KEYCLOAK_USER` is unset.
 
-To prove the commit path, point a temporary copy of the API at a scratch
-database, run an upload and commit, then restore the Secret reference and drop
-the database. The database must be owned by the app role:
+To prove the commit path:
+
+1. Point a temporary copy of the API at a scratch database.
+2. Run an upload and commit.
+3. Restore the Secret reference and drop the database.
+
+The database must be owned by the app role:
 
 ```bash
 kubectl -n grooszy-dev exec grooszy-db-1 -c postgres -- psql -U postgres -d postgres \

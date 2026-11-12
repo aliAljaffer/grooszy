@@ -107,10 +107,15 @@ and calls no provider.
 
 ## System prompt
 
-The fixed instruction names Gersz, limits answers to the packet, requires a
-plain statement when the data cannot answer, asks for short and concrete advice,
-forbids inventing, estimating, or calculating a figure, requires the
-`3,500.00 SAR` money style, and forbids em dashes.
+The fixed instruction does these things:
+
+- Names Gersz.
+- Limits answers to the packet.
+- Requires a plain statement when the data cannot answer.
+- Asks for short and concrete advice.
+- Forbids inventing, estimating, or calculating a figure.
+- Requires the `3,500.00 SAR` money style.
+- Forbids em dashes.
 
 ## Example
 

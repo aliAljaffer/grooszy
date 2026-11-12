@@ -128,14 +128,11 @@ committed again.
 
 All money is integer halalas.
 
-`already_imported` is true only when the file SHA-256 matches an accepted (committed)
-import. `resumed` is true when the file SHA-256 matches a pending import with a
-loadable preview, allowing the owner to review and commit an earlier upload.
-
-`default_selected` indicates whether the row is included in the default selection
-when the owner commits without providing explicit row choices. Rows with exact
-duplicate fingerprints or held for review (duplicate or anomaly score 8 or higher)
-are not default selected.
+| Field | True when | Effect |
+|---|---|---|
+| `already_imported` | The file SHA-256 matches an accepted (committed) import | - |
+| `resumed` | The file SHA-256 matches a pending import with a loadable preview | The owner can review and commit an earlier upload |
+| `default_selected` | The row is in the default selection when the owner commits without explicit row choices | False for rows with exact duplicate fingerprints or held for review (duplicate or anomaly score 8 or higher) |
 
 A row whose merchant has a stored alias also carries `merchant_display`, the
 name to show instead of `merchant_raw`. The alias is display only and never
@@ -197,20 +194,15 @@ Set both or neither. `from` after `to` returns 400. Months without a
 transaction are omitted; entries are oldest first. Every amount is integer
 halalas. Only `uncovered_share` is a ratio.
 
-- `income.total` is every credit in the month. `salary`, `transfers_in` and
-  `refunds` split out those kinds; `other` holds the rest (`cash_deposit` and
-  any other credit).
-- `spending` uses the generated `counts_as_spending` column with `debit > 0`.
-  Internal transfers, external transfers out, round-up sweeps and card payments
-  never enter it.
-- `transfers` is reported separately and never added to spending.
-- `uncategorised_spending` is the part of `spending.total` whose category is
-  null.
-- `outflow_total` is every debit in the month, all kinds.
-- `credit_card_coverage.uncovered` is `greatest(card_payments -
-  purchases_recorded, 0)`, where `purchases_recorded` is the debit of the three
-  purchase kinds. `uncovered_share` is `uncovered / card_payments` to six
-  decimal places, 0 when there are no card payments.
+| Field | Meaning |
+|---|---|
+| `income.total` | Every credit in the month. `salary`, `transfers_in` and `refunds` split out those kinds. `other` holds the rest (`cash_deposit` and any other credit). |
+| `spending` | Uses the generated `counts_as_spending` column with `debit > 0`. Internal transfers, external transfers out, round-up sweeps and card payments never enter it. |
+| `transfers` | Reported separately and never added to spending. |
+| `uncategorised_spending` | The part of `spending.total` whose category is null. |
+| `outflow_total` | Every debit in the month, all kinds. |
+| `credit_card_coverage.uncovered` | `greatest(card_payments - purchases_recorded, 0)`, where `purchases_recorded` is the debit of the three purchase kinds. |
+| `credit_card_coverage.uncovered_share` | `uncovered / card_payments` to six decimal places, 0 when there are no card payments. |
 
 ```json
 {
@@ -422,11 +414,13 @@ The status never carries the key or the base URL. A disabled explainer returns:
 }
 ```
 
-`kind` is one of `duplicate`, `anomaly`, `recurring`, `fees`, `cash_flow`.
-`account_kind` is one of `current`, `savings`, `credit_card`, or omitted.
-Aggregates allow only `total_debit`, `total_credit`, `transaction_count`,
-`spending_count`, `largest_debit`, `median_debit`, and `history_rows`. Money is
-integer halalas.
+| Field | Allowed values |
+|---|---|
+| `kind` | `duplicate`, `anomaly`, `recurring`, `fees`, `cash_flow` |
+| `account_kind` | `current`, `savings`, `credit_card`, or omitted |
+| Aggregates | `total_debit`, `total_credit`, `transaction_count`, `spending_count`, `largest_debit`, `median_debit`, `history_rows` |
+
+Money is integer halalas.
 
 The response is text only:
 
@@ -483,11 +477,19 @@ Success returns:
 | 503 | `{"error":"chat is not configured"}` when the base URL, model, or key is missing; `{"error":"database unavailable"}` when the ledger is not reachable |
 | 502 | `{"error":"the model did not answer"}` when the provider fails or returns no text |
 
-The model sees monthly income, spending, card payments, uncategorised spending,
-transaction counts, and the three suggestion summaries. It never sees a
-transaction description, merchant name, account number, IBAN, per-account
-balance, or file content. The recurring summary is rebuilt without the merchant
-name for this reason. With no transactions stored, the endpoint answers with a
+The model sees:
+
+- Monthly income, spending, card payments, and uncategorised spending.
+- Transaction counts.
+- The three suggestion summaries.
+
+The model never sees:
+
+- A transaction description or merchant name.
+- An account number, IBAN, or per-account balance.
+- File content.
+
+The recurring summary is rebuilt without the merchant name for this reason. With no transactions stored, the endpoint answers with a
 fixed sentence and calls no provider. See `docs/CHAT.md`.
 
 When `GROOSZY_CHAT_URL` and `GROOSZY_CHAT_API_KEY` are set, the handler sends the
@@ -552,9 +554,13 @@ Insufficient_data when fewer than one month has card payments.
 
 ### GET /api/suggestions/recurring
 
-Detects recurring payments appearing in at least 3 distinct months with at least
-3 occurrences, stable amounts within 20% of median, and consistent cadence
-(no gap between occurrences exceeds 45 days). Per series: merchant name and id,
+Detects recurring payments that meet all three criteria:
+
+- Appear in at least 3 distinct months with at least 3 occurrences.
+- Have stable amounts within 20% of median.
+- Have a consistent cadence (no gap between occurrences exceeds 45 days).
+
+Per series: merchant name and id,
 occurrence count, distinct months, median and total amount, first and last date,
 median cadence in days, and transaction ids.
 
@@ -748,9 +754,11 @@ and the salary drill-down all use the same rule, so their totals agree.
 Sends the reminder now to the stored address, so delivery can be checked
 without waiting for the first of the month.
 
-- 200 `{"sent": true}` when the email was accepted by the SMTP server.
-- 422 `{"error": "no reminder email set"}` when no address is stored.
-- 502 `{"error": "..."}` when sending fails or email is disabled.
+| Status | Body | Meaning |
+|---|---|---|
+| 200 | `{"sent": true}` | The SMTP server accepted the email |
+| 422 | `{"error": "no reminder email set"}` | No address is stored |
+| 502 | `{"error": "..."}` | Sending fails or email is disabled |
 
 ## Known limits
 

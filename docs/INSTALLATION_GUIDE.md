@@ -26,47 +26,48 @@ Install Grooszy, configure its integrations, and review its features. The
 - Docker for a local database
 - An OIDC issuer such as Keycloak
 
-The API requires `DATABASE_URL`, `OIDC_ISSUER`, and `OIDC_OWNER_SUBJECT`. The
-web app requires `OIDC_CLIENT_ID`, `SESSION_SECRET`, `APP_ORIGIN`, and
-`API_BASE_URL` in addition to `OIDC_ISSUER`.
+| Component | Required variables |
+|---|---|
+| API | `DATABASE_URL`, `OIDC_ISSUER`, `OIDC_OWNER_SUBJECT` |
+| Web app | `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `SESSION_SECRET`, `APP_ORIGIN`, `API_BASE_URL` |
 
 ## Local setup
 
-Start PostgreSQL and set the database URL:
+1. Start PostgreSQL and set the database URL:
 
-```bash
-docker run -d --name expense-db \
-  -e POSTGRES_PASSWORD=test \
-  -e POSTGRES_DB=test \
-  -p 5432:5432 postgres:17
+   ```bash
+   docker run -d --name expense-db \
+     -e POSTGRES_PASSWORD=test \
+     -e POSTGRES_DB=test \
+     -p 5432:5432 postgres:17
 
-export DATABASE_URL='postgres://postgres:test@localhost:5432/test?sslmode=disable'
-```
+   export DATABASE_URL='postgres://postgres:test@localhost:5432/test?sslmode=disable'
+   ```
 
-Start the API with an OIDC issuer and the subject allowed to sign in:
+2. Start the API with an OIDC issuer and the subject allowed to sign in:
 
-```bash
-export OIDC_ISSUER=https://kc.example.com/realms/homelab
-export OIDC_AUDIENCE=grooszy
-export OIDC_OWNER_SUBJECT=<allowed-keycloak-subject>
-go run ./cmd/api
-```
+   ```bash
+   export OIDC_ISSUER=https://kc.example.com/realms/homelab
+   export OIDC_AUDIENCE=grooszy
+   export OIDC_OWNER_SUBJECT=<allowed-keycloak-subject>
+   go run ./cmd/api
+   ```
 
-The API applies database migrations at startup and listens on `:8080` by
-default.
+   The API applies database migrations at startup and listens on `:8080` by
+   default.
 
-Start the web app:
+3. Start the web app:
 
-```bash
-cd web
-npm ci
-OIDC_ISSUER=https://kc.example.com/realms/homelab \
-OIDC_CLIENT_ID=grooszy \
-SESSION_SECRET=at-least-32-characters-of-local-secret \
-APP_ORIGIN=http://127.0.0.1:3000 \
-API_BASE_URL=http://127.0.0.1:8080 \
-npm run dev
-```
+   ```bash
+   cd web
+   npm ci
+   OIDC_ISSUER=https://kc.example.com/realms/homelab \
+   OIDC_CLIENT_ID=grooszy \
+   SESSION_SECRET=at-least-32-characters-of-local-secret \
+   APP_ORIGIN=http://127.0.0.1:3000 \
+   API_BASE_URL=http://127.0.0.1:8080 \
+   npm run dev
+   ```
 
 For a local test issuer or Kubernetes, see the [operations guide](OPERATIONS.md).
 
@@ -102,8 +103,11 @@ go run ./cmd/statement statements/<file>.xlsx
 go run ./cmd/statement "statements/<file>.pdf" --json=out.json
 ```
 
-Exit code `0` means the statement reconciled. Exit code `1` means the import
-was rejected. Exit code `2` means the file could not be read or parsed.
+| Exit code | Meaning |
+|---|---|
+| `0` | The statement reconciled |
+| `1` | The import was rejected |
+| `2` | The file could not be read or parsed |
 
 ### AI integrations
 

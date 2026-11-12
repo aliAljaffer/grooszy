@@ -25,9 +25,10 @@ Restore testing is not automated. There is no restore script and no restore test
 in this repository. Until a restore has been run against a real backup, restore
 is unproven.
 
-Warning: stop the API before a restore. The API applies migrations at startup
-and the reminder loop reads and writes `app_setting`, so both can write to the
-database while it is being restored.
+> [!WARNING]
+> Stop the API before a restore. The API applies migrations at startup
+> and the reminder loop reads and writes `app_setting`, so both can write to the
+> database while it is being restored.
 
 1. Stop the API.
 2. Restore the dump into an empty database.
